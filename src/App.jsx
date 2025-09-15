@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import './App.css'
+import AddTodo from './components/AddTodo'
+import TodoList from './components/TodoList'
 
 function App() {
   const [todos, setTodos] = useState([
@@ -46,80 +48,25 @@ function App() {
     ))
   }
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      addTodo()
-    }
-  }
-
-  const handleDescriptionKeyPress = (e) => {
-    if (e.key === 'Enter' && e.ctrlKey) {
-      addTodo()
-    }
-  }
 
   return (
     <div className="container">
       <h1 className="title">todo list</h1>
 
-      <div className="add-todo-section">
-        <div className="input-group">
-          <input
-            type="text"
-            value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="new todo"
-            className="todo-input"
-          />
-          <button onClick={addTodo} className="add-btn">add</button>
-        </div>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          onKeyPress={handleDescriptionKeyPress}
-          placeholder="description"
-          className="description-input"
-        />
-      </div>
+      <AddTodo
+        newTodo={newTodo}
+        setNewTodo={setNewTodo}
+        description={description}
+        setDescription={setDescription}
+        onAddTodo={addTodo}
+      />
 
-      <div className="todo-list">
-        {todos.map((todo, index) => (
-          <div key={todo.id}>
-            <div 
-              className="todo-item"
-              onClick={(e) => {
-                if (e.target.type !== 'checkbox' && !e.target.classList.contains('delete-btn')) {
-                  toggleDescription(todo.id)
-                }
-              }}
-            >
-              <input
-                type="checkbox"
-                className="todo-checkbox"
-                checked={todo.completed}
-                onChange={() => toggleTodo(todo.id)}
-              />
-              <span className="todo-text">{todo.text}</span>
-              <button 
-                className="delete-btn"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  deleteTodo(todo.id)
-                }}
-              >
-                delete
-              </button>
-            </div>
-            {todo.expanded && (
-              <div className="todo-description show">
-                {todo.description}
-              </div>
-            )}
-            {index < todos.length - 1 && <div className="separator" />}
-          </div>
-        ))}
-      </div>
+      <TodoList
+        todos={todos}
+        onToggle={toggleTodo}
+        onDelete={deleteTodo}
+        onToggleDescription={toggleDescription}
+      />
     </div>
   )
 }
